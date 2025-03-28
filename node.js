@@ -1,64 +1,59 @@
 const fs = require('fs');
 
-const input = fs.readFileSync('lights.dat', 'utf-8').trim().split('\n');
+const data = fs.readFileSync('lights.dat', 'utf8');
+const lines = data.trim().split('\n');
 
-const n = parseInt(input[0]);
+const n = parseInt(lines[0]);
 let lineIndex = 1;
-
-let output = [];
+const results = [];
 
 for (let i = 0; i < n; i++) {
-
-    let [lights, m] = input[lineIndex].split(' ');
-    m = parseInt(m);
+    const [initialState, m] = lines[lineIndex].trim().split(/ +/, 2);
+    const numActions = parseInt(m);
     lineIndex++;
     
-    let lightsArray = lights.split('').map(Number);
+    let lights = initialState.split('');
     
-    for (let j = 0; j < m; j++) {
-        const action = input[lineIndex].split(' ');
-        lineIndex++;
+    for (let j = 0; j < numActions; j++) {
+        const action = lines[lineIndex].trim();
+        const parts = action.split(' ');
+        const command = parts[0];
         
-        if (action[0] === 'FLIP') {
-            if (action[1] === 'ALL') {
-
-                lightsArray = lightsArray.map(light => (light === 1 ? 0 : 1));
+        if (command === 'FLIP') {
+            if (parts[1] === 'ALL') {
+                lights = lights.map(light => light === '1' ? '0' : '1');
             } else {
-
-                const a = parseInt(action[1]);
-                const b = parseInt(action[2]);
+                const a = parseInt(parts[1]);
+                const b = parseInt(parts[2]);
                 for (let k = a; k < b; k++) {
-                    lightsArray[k] = lightsArray[k] === 1 ? 0 : 1;
+                    lights[k] = lights[k] === '1' ? '0' : '1';
                 }
             }
-        } else if (action[0] === 'ON') {
-            if (action[1] === 'ALL') {
-
-                lightsArray = lightsArray.map(() => 1);
+        } else if (command === 'ON') {
+            if (parts[1] === 'ALL') {
+                lights = lights.map(() => '1');
             } else {
-
-                const a = parseInt(action[1]);
-                const b = parseInt(action[2]);
+                const a = parseInt(parts[1]);
+                const b = parseInt(parts[2]);
                 for (let k = a; k < b; k++) {
-                    lightsArray[k] = 1;
+                    lights[k] = '1';
                 }
             }
-        } else if (action[0] === 'OFF') {
-            if (action[1] === 'ALL') {
-
-                lightsArray = lightsArray.map(() => 0);
+        } else if (command === 'OFF') {
+            if (parts[1] === 'ALL') {
+                lights = lights.map(() => '0');
             } else {
-
-                const a = parseInt(action[1]);
-                const b = parseInt(action[2]);
+                const a = parseInt(parts[1]);
+                const b = parseInt(parts[2]);
                 for (let k = a; k < b; k++) {
-                    lightsArray[k] = 0;
+                    lights[k] = '0';
                 }
             }
         }
+        lineIndex++;
     }
     
-    output.push(lightsArray.join(''));
+    results.push(lights.join(''));
 }
 
-console.log(output.join('\n'));
+results.forEach(result => console.log(result));

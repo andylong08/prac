@@ -21,17 +21,33 @@ for (let i = 0; i < n; i++) {
         
         if (command === 'FLIP') {
             if (parts[1] === 'ALL') {
-                lights = lights.map(light => light === '1' ? '0' : '1');
+                let newLights = [];
+                for (let k = 0; k < lights.length; k++) {
+                    if (lights[k] === '1') {
+                        newLights[k] = '0';
+                    } else {
+                        newLights[k] = '1';
+                    }
+                }
+                lights = newLights;
             } else {
                 const a = parseInt(parts[1]);
                 const b = parseInt(parts[2]);
                 for (let k = a; k < b; k++) {
-                    lights[k] = lights[k] === '1' ? '0' : '1';
+                    if (lights[k] === '1') {
+                        lights[k] = '0';
+                    } else {
+                        lights[k] = '1';
+                    }
                 }
             }
         } else if (command === 'ON') {
             if (parts[1] === 'ALL') {
-                lights = lights.map(() => '1');
+                let newLights = [];
+                for (let k = 0; k < lights.length; k++) {
+                    newLights[k] = '1';
+                }
+                lights = newLights;
             } else {
                 const a = parseInt(parts[1]);
                 const b = parseInt(parts[2]);
@@ -41,7 +57,11 @@ for (let i = 0; i < n; i++) {
             }
         } else if (command === 'OFF') {
             if (parts[1] === 'ALL') {
-                lights = lights.map(() => '0');
+                let newLights = [];
+                for (let k = 0; k < lights.length; k++) {
+                    newLights[k] = '0';
+                }
+                lights = newLights;
             } else {
                 const a = parseInt(parts[1]);
                 const b = parseInt(parts[2]);
@@ -56,4 +76,6 @@ for (let i = 0; i < n; i++) {
     results.push(lights.join(''));
 }
 
-results.forEach(result => console.log(result));
+for (let i = 0; i < results.length; i++) {
+    console.log(results[i]);
+}
